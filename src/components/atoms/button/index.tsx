@@ -5,7 +5,7 @@ import { ButtonProps } from "react-native";
 const Button: FC<{
   title: string;
   onPress: () => void;
-  props?: ButtonProps;
+  props?: Partial<ButtonProps>;
 }> = ({ title, props, onPress }) => {
   return <Base title={title} onPress={onPress} {...props} />;
 };

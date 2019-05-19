@@ -1,12 +1,15 @@
-import React, { Component, FC, useEffect } from "react";
-import { Platform, Text, View } from "react-native";
-import styled from "styled-components/native";
+import React, { FC, useEffect, useContext } from "react";
+import { View } from "react-native";
 import MasonryList from "../components/molecules/masonrylist";
 import { History } from "history";
+import { Context } from "../App";
 
 type Props = { history: History };
 
 const Main: FC<Props> = ({ history }) => {
+  const { setHistory } = useContext(Context);
+  setHistory(history);
+
   useEffect(() => {
     history.push("/account");
   }, []);

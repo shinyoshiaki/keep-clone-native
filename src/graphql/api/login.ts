@@ -2,41 +2,38 @@ import gql from "graphql-tag";
 import GraphQLClient from "../client";
 import { User } from "../generated/graphql";
 
-class UserWebApi {
-  private graphqlClient: GraphQLClient = new GraphQLClient();
+const graphqlClient: GraphQLClient = new GraphQLClient();
 
-  getMe = async (obj: { name: string; password: string }) => {
-    let result: any;
+export default async function loginApi(obj: {
+  name: string;
+  password: string;
+}) {
+  let result: any;
 
-    try {
-      result = await this.graphqlClient.query(
-        gql`
-          query getUser {
-            getUser(input: { name: "${obj.name}", password: "${
-          obj.password
-        }" }) {
-              token
-              code
-              name
-            }
+  try {
+    result = await graphqlClient.query(
+      gql`
+        query getUser {
+          getUser(input: { name: "${obj.name}", password: "${obj.password}" }) {
+            token
+            code
+            name
           }
-        `
-      );
-    } catch (err) {
-      throw err;
-    }
+        }
+      `
+    );
+  } catch (err) {
+    throw err;
+  }
 
-    if (result.getUser) {
-      const user = result.getUser as User;
-      return {
-        token: user.token,
-        code: user.code,
-        name: user.name
-      };
-    }
+  if (result.getUser) {
+    const user = result.getUser as User;
+    return {
+      token: user.token,
+      code: user.code,
+      name: user.name
+    };
+  }
 
-    return undefined;
-  };
+  return undefined;
 }
-
-export default UserWebApi;
