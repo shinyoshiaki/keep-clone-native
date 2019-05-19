@@ -3,6 +3,8 @@ import styled from "styled-components/native";
 import Input from "../components/atoms/input";
 import Card from "../components/atoms/card";
 import Form from "../components/molecules/form";
+import Button from "../components/atoms/button";
+import Space from "../components/atoms/space";
 
 const Account: FC = () => {
   return (
@@ -14,6 +16,8 @@ const Account: FC = () => {
             ["pass", () => {}, { secureTextEntry: true }]
           ]}
         />
+        <Space size={15} />
+        <Button title="login" onPress={() => {}} />
       </Container>
     </Base>
   );
