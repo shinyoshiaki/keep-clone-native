@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
 
 export default function createStore() {
   const store = reduxCreateStore(rootReducer, applyMiddleware(logger));
-  return { store };
+  return store;
 }
 
 export interface ReduxState {

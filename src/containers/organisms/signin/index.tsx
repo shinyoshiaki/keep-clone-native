@@ -1,4 +1,5 @@
-import React, { FC, useContext } from "react";
+import React, { FC } from "react";
+import { withRouter } from "react-router";
 import styled from "styled-components/native";
 import Form from "../../../components/molecules/form";
 import Space from "../../../components/atoms/space";
@@ -8,13 +9,12 @@ import { useApi } from "../../../hooks/useApi";
 import loginApi from "../../../graphql/api/login";
 import { useDispatch } from "redux-react-hook";
 import { doLogin } from "../../../modules/user";
-import { Context } from "../../../App";
+import { History } from "history";
 
-const SignIn: FC = () => {
+const SignIn: FC<{ history: History }> = ({ history }) => {
   const { fetch, loading } = useApi(loginApi);
   const { state, setState } = useObject({ name: "", password: "" });
   const dispatch = useDispatch();
-  const { history } = useContext(Context);
 
   const login = async () => {
     if (!loading) {
@@ -22,7 +22,7 @@ const SignIn: FC = () => {
       if (res) {
         const { name, token, code } = res;
         dispatch(doLogin(name, token, code));
-        history!.push("/");
+        history.push("/");
       }
     }
   };
@@ -46,4 +46,4 @@ const Container = styled.View`
   padding: 10px;
 `;
 
-export default SignIn;
+export default withRouter(SignIn);

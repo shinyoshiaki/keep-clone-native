@@ -1,17 +1,16 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useEffect } from "react";
 import styled from "styled-components/native";
 import Tabs from "../components/atoms/tab";
 import SignIn from "../containers/organisms/signin";
 import SignUp from "../containers/organisms/signup";
-import { Context } from "../App";
-import { History } from "history";
+import { Text } from "react-native";
 
-const Account: FC<{ history: History }> = ({ history }) => {
-  const { setHistory } = useContext(Context);
-  setHistory(history);
+const Account: FC = () => {
+  useEffect(() => {}, []);
 
   return (
     <Base>
+      <Text>account</Text>
       <Tabs items={[["signin", <SignIn />], ["signup", <SignUp />]]} />
     </Base>
   );

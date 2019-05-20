@@ -11,17 +11,17 @@ export default async function loginApi(obj: {
   let result: any;
 
   try {
-    result = await graphqlClient.query(
-      gql`
-        query getUser {
-          getUser(input: { name: "${obj.name}", password: "${obj.password}" }) {
-            token
-            code
-            name
-          }
-        }
-      `
-    );
+    const query = JSON.stringify({
+      query: `
+    query getUser {
+      getUser(input: { name: "${obj.name}", password: "${obj.password}" }) {
+        token
+        code
+        name
+      }
+    }
+  `
+    });
   } catch (err) {
     throw err;
   }
