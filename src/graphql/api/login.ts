@@ -1,8 +1,5 @@
-import gql from "graphql-tag";
-import GraphQLClient from "../client";
 import { User } from "../generated/graphql";
-
-const graphqlClient: GraphQLClient = new GraphQLClient();
+import graphqlClient from "../client";
 
 export default async function loginApi(obj: {
   name: string;
@@ -18,24 +15,12 @@ export default async function loginApi(obj: {
       }
     }
   `;
-    const url = "https://echosome.tk:1333/query";
-    const opts = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query })
+    const user = await graphqlClient<User>(query);
+    return {
+      token: user.token,
+      code: user.code,
+      name: user.name
     };
-    const res = await fetch(url, opts);
-    const result = await res.json();
-    const data = result.data;
-
-    if (data.getUser) {
-      const user = data.getUser as User;
-      return {
-        token: user.token,
-        code: user.code,
-        name: user.name
-      };
-    }
   } catch (err) {
     console.error(err);
   }

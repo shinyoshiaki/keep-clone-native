@@ -1,37 +1,32 @@
 import gql from "graphql-tag";
 import GraphQLClient from "../client";
 import { NewMemo, Memo } from "../generated/graphql";
+import graphqlClient from "../client";
 
-const graphqlClient: GraphQLClient = new GraphQLClient();
 async function postApi(obj: NewMemo) {
-  console.log(JSON.stringify(obj.tag));
-  const result = await graphqlClient
-    .query(
-      gql`
-        mutation createMemo {
-          createMemo(
-            input: {
-              token: "${obj.token}"
-              title: "${obj.title}"
-              text: "${obj.text}"
-              tag:${JSON.stringify(obj.tag)}
-            }
-          ) {
-            time
-            code
-          }
-        }
-      `
-    )
-    .catch();
+  const query = `
+  mutation createMemo {
+    createMemo(
+      input: {
+        token: "${obj.token}"
+        title: "${obj.title}"
+        text: "${obj.text}"
+        tag:${JSON.stringify(obj.tag)}
+      }
+    ) {
+      time
+      code
+    }
+  }
+`;
 
-  if (result.createMemo) {
-    const memo = result.createMemo as Memo;
+  try {
+    const memo = await graphqlClient<Memo>(query);
     return {
       time: memo.time,
       code: memo.code
     };
-  }
+  } catch (error) {}
 
   return undefined;
 }

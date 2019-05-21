@@ -1,40 +1,28 @@
-import gql from "graphql-tag";
-import GraphQLClient from "../client";
 import { Memo, GetAllMemo } from "../generated/graphql";
-import { Post } from "../../modules/main";
-
-const graphqlClient: GraphQLClient = new GraphQLClient();
+import graphqlClient from "../client";
 
 async function allPostApi(obj: GetAllMemo) {
-  const result = await graphqlClient
-    .query(
-      gql`
-        query getAllMemo {
-          getAllMemo(
-            input: { token: "${obj.token}" }
-          ) {
-            owner
-            code
-            title
-            time
-            text
-            tag
-          }
-        }
-      `
-    )
-    .catch();
+  const query = `
+  query getAllMemo {
+    getAllMemo(
+      input: { token: "${obj.token}" }
+    ) {
+      owner
+      code
+      title
+      time
+      text
+      tag
+    }
+  }`;
 
-  const { getAllMemo } = result;
-  if (getAllMemo) {
-    const res = getAllMemo as Memo[];
-    return res
-      ? ((res.map(memo => {
-          memo.tag = memo.tag.split(",") as any;
-          return memo;
-        }) as any) as Post[])
-      : undefined;
-  }
+  try {
+    const res = await graphqlClient<Memo[]>(query);
+    return res.map(memo => {
+      memo.tag = memo.tag.split(",") as any;
+      return memo;
+    }) as any;
+  } catch (error) {}
 
   return undefined;
 }

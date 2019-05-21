@@ -1,35 +1,26 @@
-import gql from "graphql-tag";
-import GraphQLClient from "../client";
 import { Memo, RemoveMemo } from "../generated/graphql";
-
-const graphqlClient: GraphQLClient = new GraphQLClient();
+import graphqlClient from "../client";
 
 async function removepostApi(obj: RemoveMemo) {
-  const result = await graphqlClient
-    .query(
-      gql`
-        mutation RemoveMemo {
-          removeMemo(
-            input: {
-              token: "${obj.token}"
-              memoCode: "${obj.memoCode}"
-            }
-          ) {
-            code
-          }
-        }
-      `
-    )
-    .catch();
+  const query = `
+  mutation RemoveMemo {
+    removeMemo(
+      input: {
+        token: "${obj.token}"
+        memoCode: "${obj.memoCode}"
+      }
+    ) {
+      code
+    }
+  }
+`;
 
-  console.log({ result });
-
-  if (result && result.removeMemo) {
-    const memo = result.removeMemo as Memo;
+  try {
+    const memo = await graphqlClient<Memo>(query);
     return {
       code: memo.code
     };
-  }
+  } catch (error) {}
 
   return undefined;
 }

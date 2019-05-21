@@ -1,24 +1,16 @@
-import { execute, makePromise, GraphQLRequest } from "apollo-link";
-import { HttpLink } from "apollo-link-http";
 import { gqlUrl } from "../environment";
 
-class GraphQLClient {
-  private httpLink: HttpLink;
-
-  constructor() {
-    this.httpLink = new HttpLink({ uri: gqlUrl });
-  }
-
-  query = async (query: any, variables: Record<string, any> = {}) => {
-    const op: GraphQLRequest = { query, variables };
-    try {
-      const result = await makePromise(execute(this.httpLink, op));
-
-      return result.data;
-    } catch (err) {
-      throw err;
-    }
+export default async function graphqlClient<T>(query: string) {
+  const opts = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query })
   };
-}
+  const res = await fetch(gqlUrl, opts);
+  const result = await res.json();
+  const data = result.data;
 
-export default GraphQLClient;
+  const key = Object.keys(data)[0];
+
+  return data[key] as T;
+}

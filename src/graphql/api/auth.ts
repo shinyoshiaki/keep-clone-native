@@ -1,26 +1,19 @@
-import gql from "graphql-tag";
-import GraphQLClient from "../client";
-
-const graphqlClient: GraphQLClient = new GraphQLClient();
+import graphqlClient from "../client";
 
 export default async function AuthApi(obj: { token: string }) {
-  const result = await graphqlClient
-    .query(
-      gql`
-      query auth {
-        auth(input: {
-            token:"${obj.token}"
-        })
-      }
-    `
-    )
-    .catch();
-
-  const { auth } = result;
-
-  if (auth) {
-    return auth as string;
+  const query = `
+  query auth {
+    auth(input: {
+        token:"${obj.token}"
+    })
   }
+`;
+
+  try {
+    const res = await graphqlClient<string>(query);
+
+    return res;
+  } catch (error) {}
 
   return undefined;
 }
